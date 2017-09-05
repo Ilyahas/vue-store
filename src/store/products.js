@@ -2,33 +2,33 @@ import shop from '@/api/shop'
 
 const state = {
     all: []
-};
+}
 
 const actions = {
-    addToCart({commit}, product) {
-        commit('add_to_cart', product.id);
+    addToCart ({commit}, product) {
+        commit('add_to_cart', product.id)
     },
-    getAllProducts({commit}) {
+    getAllProducts ({commit}) {
         shop.getProducts(products => {
-            commit('recieve_products', products);
+            commit('recieve_products', products)
         })
     }
-};
+}
 
 const mutations = {
-    recieveProducts(state, products) {
-        state.all = products;
+    recieve_products (state, products) {
+        state.all = products
     },
-    addToCart(state, productId) {
-        state.all.find(p => p.id === productId).inventory--;
+    add_to_cart (state, productId) {
+        state.all.find(p => p.id === productId).inventory--
     }
-};
+}
 
 const getters = {
-    addProducts(state) {
-        return state.all;
+    allProducts (state) {
+        return state.all
     }
-};
+}
 
 export default {
     state,

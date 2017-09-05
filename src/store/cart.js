@@ -3,63 +3,71 @@ import shop from '@/api/shop'
 const state = {
     added: [],
     lastCheckout: null
-};
+}
 
 const actions = {
-    checkout({commit, state}, products) {
-        const savedCartItems = [...state.added];
-        commit('checkout_request');
-        shop.buyProducts(products,
+    // The first argument is the vuex store, but we're using only the
+    // dispatch function, which applies a mutation to the store,
+    // and the current state of the store
+    checkout ({commit, state}, products) {
+        const savedCartItems = [...state.added]
+        commit('checkout_request')
+        shop.buyProducts(
+            products,
             () => commit('checkout_successful'),
-            () => commit('checkout_failure', savedCartItems));
+            () => commit('checkout_failure', savedCartItems)
+        )
     }
-};
+}
 
 const mutations = {
-    addToCart (state, pruductId) {
-        state.lastCheckout = null;
-        const record = state.added.find(p => p.id === pruductId);
-        if(!record) {
+    add_to_cart (state, productId) {
+        state.lastCheckout = null
+        const record = state.added.find(p => p.id === productId)
+        if (!record) {
             state.added.push({
-                id: pruductId,
+                id: productId,
                 quantity: 1
             })
         } else {
-            record.quantity++;
+            record.quantity++
         }
     },
-    checkoutRequest(state) {
-        state.added = [];
-        state.lastCheckout = null;
+    checkout_request (state) {
+        // clear cart
+        state.added = []
+        state.lastCheckout = null
     },
-    checkoutSuccessfull(state) {
-        state.lastCheckout = 'successfull';
+    checkout_successful (state) {
+        state.lastCheckout = 'successful'
     },
-    checkoutFailure(state, savedCardItems) {
-        state.added = savedCardItems;
-        state.lastCheckout = 'failed';
+    checkout_failure (state, savedCartItems) {
+        // rollback to the cart saved before sending the request
+        state.added = savedCartItems
+        state.lastCheckout = 'failed'
     }
-};
+}
 
 const getters = {
-    cartProducts (state, rootState) {
+    cartProducts (state, getters, rootState) {
         return state.added.map(({ id, quantity }) => {
-            const prod = rootState.products.add.find(p => p.id === id);
+            const product = rootState.products.all.find(p => p.id === id)
             return {
-                title: prod.title,
-                price: prod.price,
+                title: product.title,
+                price: product.price,
                 id,
                 quantity
             }
         })
     },
-    cartCount(state) {
-        let totalCount = 0;
+    cartCount (state) {
+        var totalCount = 0
         state.added.forEach(({ quantity }) => {
             totalCount += quantity
         })
+        return totalCount
     }
-};
+}
 
 export default {
     state,

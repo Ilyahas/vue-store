@@ -6,15 +6,15 @@ import router from './router'
 import store from './store/index'
 import { sync } from 'vuex-router-sync'
 
-sync(store, router);
+sync(store, router)
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
+    el: '#app',
     router,
     store,
-  template: '<App/>',
-  components: { App }
-});
+    template: '<App/>',
+    components: { App }
+})
